@@ -55,20 +55,18 @@ export default function App() {
 
   return (
     <>
-      <NavBar movies={movies} />
+      <NavBar>
+        <Logo />
+        <SearchBar />
+        <NumResults movies={movies} />
+      </NavBar>
       <Main movies={movies} />
     </>
   );
 }
 
-function NavBar({ movies }) {
-  return (
-    <nav className="nav-bar">
-      <Logo />
-      <SearchBar />
-      <NumResults movies={movies} />
-    </nav>
-  );
+function NavBar({ children }) {
+  return <nav className="nav-bar">{children}</nav>;
 }
 
 function Logo() {
