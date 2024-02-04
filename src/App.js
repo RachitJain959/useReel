@@ -64,9 +64,7 @@ function NavBar() {
     <nav className="nav-bar">
       <Logo />
       <SearchBar />
-      <p className="num-results">
-        Found <strong>X</strong> results
-      </p>
+      <SearchResults />
     </nav>
   );
 }
@@ -91,6 +89,14 @@ function SearchBar() {
       value={query}
       onChange={(e) => setQuery(e.target.value)}
     />
+  );
+}
+
+function SearchResults() {
+  return (
+    <p className="num-results">
+      Found <strong>X</strong> results
+    </p>
   );
 }
 
