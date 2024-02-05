@@ -21,8 +21,9 @@ root.render(
     <StarRating
       size={24}
       messages={['Terrible', 'Bad', 'Okay', 'Good', 'Amazing']}
+      onSetRating={null}
     />
-    <StarRating maxRating={10} defaultRating={3} onSetRating={() => {}} />
+    <StarRating maxRating={10} defaultRating={3} onSetRating={null} />
     <Test />
   </React.StrictMode>
 );
