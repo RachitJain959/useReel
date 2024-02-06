@@ -4,23 +4,23 @@ import StarRating from './StarRating';
 const tempMovieData = [
   {
     imdbID: 'tt1375666',
-    Title: 'Inception',
-    Year: '2010',
-    Poster:
+    title: 'Inception',
+    year: '2010',
+    poster:
       'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg',
   },
   {
     imdbID: 'tt0133093',
-    Title: 'The Matrix',
-    Year: '1999',
-    Poster:
+    title: 'The Matrix',
+    year: '1999',
+    poster:
       'https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg',
   },
   {
     imdbID: 'tt6751668',
-    Title: 'Parasite',
-    Year: '2019',
-    Poster:
+    title: 'Parasite',
+    year: '2019',
+    poster:
       'https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTItODQ2ZC00NTY5LWE0ZDYtZTI3MjcwN2Q5NTVkXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_SX300.jpg',
   },
 ];
@@ -28,9 +28,9 @@ const tempMovieData = [
 const tempWatchedData = [
   {
     imdbID: 'tt1375666',
-    Title: 'Inception',
-    Year: '2010',
-    Poster:
+    title: 'Inception',
+    year: '2010',
+    poster:
       'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg',
     runtime: 148,
     imdbRating: 8.8,
@@ -38,9 +38,9 @@ const tempWatchedData = [
   },
   {
     imdbID: 'tt0088763',
-    Title: 'Back to the Future',
-    Year: '1985',
-    Poster:
+    title: 'Back to the Future',
+    year: '1985',
+    poster:
       'https://m.media-amazon.com/images/M/MV5BZmU0M2Y1OGUtZjIxNi00ZjBkLTg1MjgtOWIyNThiZWIwYjRiXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg',
     runtime: 116,
     imdbRating: 8.5,
@@ -53,7 +53,7 @@ const average = (arr) =>
 
 export default function App() {
   const [movies, setMovies] = useState(tempMovieData);
-  const [watched, setWatched] = useState(tempWatchedData);
+  const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [query, setQuery] = useState('interstellar');
@@ -67,6 +67,11 @@ export default function App() {
 
   function handleCloseMovie() {
     setSelectedMovieId(null);
+  }
+
+  function handleAddWatched(movie) {
+    setWatched((watched) => [...watched, movie]);
+    handleCloseMovie();
   }
 
   useEffect(
@@ -124,6 +129,7 @@ export default function App() {
             <SelectedMovieDetails
               selectedMovieId={selectedMovieId}
               onCloseMovie={handleCloseMovie}
+              onAddWatch={handleAddWatched}
             />
           ) : (
             <>
@@ -281,7 +287,7 @@ function WatchedSummary({ watched }) {
   );
 }
 
-function SelectedMovieDetails({ selectedMovieId, onCloseMovie }) {
+function SelectedMovieDetails({ selectedMovieId, onCloseMovie, onAddWatch }) {
   const [selectedMovie, setSelectedMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
@@ -297,6 +303,19 @@ function SelectedMovieDetails({ selectedMovieId, onCloseMovie }) {
     Director: director,
     Genre: genre,
   } = selectedMovie;
+
+  function handleAdd() {
+    const newWatchedMovie = {
+      imdbID: selectedMovieId,
+      title,
+      year,
+      poster,
+      runtime: Number(runtime.split(' ').at(0)),
+      imdbRating: Number(imdbRating),
+    };
+
+    onAddWatch(newWatchedMovie);
+  }
 
   useEffect(
     function () {
@@ -342,6 +361,12 @@ function SelectedMovieDetails({ selectedMovieId, onCloseMovie }) {
           <section>
             <div className="rating">
               <StarRating maxRating={10} size={24} />
+              <button
+                className="btn-add"
+                onClick={() => handleAdd(selectedMovie)}
+              >
+                Add to list
+              </button>
             </div>
             <p>
               <em>{plot}</em>
@@ -369,8 +394,8 @@ function WatchedMoviesList({ watched }) {
 function WatchedMovie({ movie }) {
   return (
     <li>
-      <img src={movie.Poster} alt={`${movie.Title} poster`} />
-      <h3>{movie.Title}</h3>
+      <img src={movie.poster} alt={`${movie.title} poster`} />
+      <h3>{movie.title}</h3>
       <div>
         <p>
           <span>⭐️</span>
