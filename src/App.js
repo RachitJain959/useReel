@@ -71,7 +71,6 @@ export default function App() {
 
   function handleAddWatched(movie) {
     setWatched((watched) => [...watched, movie]);
-    handleCloseMovie();
   }
 
   useEffect(
@@ -290,6 +289,7 @@ function WatchedSummary({ watched }) {
 function SelectedMovieDetails({ selectedMovieId, onCloseMovie, onAddWatch }) {
   const [selectedMovie, setSelectedMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [userRating, setUserRating] = useState(null);
 
   const {
     Title: title,
@@ -312,9 +312,11 @@ function SelectedMovieDetails({ selectedMovieId, onCloseMovie, onAddWatch }) {
       poster,
       runtime: Number(runtime.split(' ').at(0)),
       imdbRating: Number(imdbRating),
+      userRating,
     };
 
     onAddWatch(newWatchedMovie);
+    onCloseMovie();
   }
 
   useEffect(
@@ -360,7 +362,11 @@ function SelectedMovieDetails({ selectedMovieId, onCloseMovie, onAddWatch }) {
           </header>
           <section>
             <div className="rating">
-              <StarRating maxRating={10} size={24} />
+              <StarRating
+                maxRating={10}
+                size={24}
+                onSetRating={setUserRating}
+              />
               <button
                 className="btn-add"
                 onClick={() => handleAdd(selectedMovie)}
