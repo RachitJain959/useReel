@@ -52,11 +52,11 @@ const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 export default function App() {
-  const [movies, setMovies] = useState(tempMovieData);
+  const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [query, setQuery] = useState('interstellar');
+  const [query, setQuery] = useState('');
   const [selectedMovieId, setSelectedMovieId] = useState(null);
 
   const tempQuery = 'interstellar';
@@ -114,6 +114,7 @@ export default function App() {
         setError('');
         return;
       }
+      handleCloseMovie();
       fetchMovies();
 
       return function () {
@@ -355,6 +356,23 @@ function SelectedMovieDetails({
 
   useEffect(
     function () {
+      function callback(e) {
+        if (e.code === 'Escape') {
+          onCloseMovie();
+        }
+      }
+
+      document.addEventListener('keydown', callback);
+
+      return function () {
+        document.removeEventListener('keydown', callback);
+      };
+    },
+    [onCloseMovie]
+  );
+
+  useEffect(
+    function () {
       if (!title) return;
       document.title = `Movie | ${title}`;
 
@@ -373,7 +391,6 @@ function SelectedMovieDetails({
           `http://www.omdbapi.com/?apikey=${process.env.REACT_APP_KEY}&i=${selectedMovieId}`
         );
         const data = await res.json();
-        console.log(data);
         setSelectedMovie(data);
         setIsLoading(false);
       }
