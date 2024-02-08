@@ -79,25 +79,34 @@ export default function App() {
 
   useEffect(
     function () {
+      const controller = new AbortController(); //to counter race condition
+
       async function fetchMovies() {
         try {
           setIsLoading(true);
           setError('');
 
           const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${process.env.REACT_APP_KEY}&s=${query}`
+            `http://www.omdbapi.com/?apikey=${process.env.REACT_APP_KEY}&s=${query}`,
+            { signal: controller.signal }
           );
           if (!res.ok) {
             throw new Error('Something went wrong');
           }
+
           const data = await res.json();
           if (data.Response === 'False') {
             throw new Error('Movie not found');
           }
+
           setMovies(data.Search);
-          setIsLoading(false);
+          setError('');
         } catch (err) {
-          setError(err.message);
+          if (err.name !== 'Abort') {
+            setError(err.message);
+          }
+        } finally {
+          setIsLoading(false);
         }
       }
       if (query.length < 3) {
@@ -106,6 +115,10 @@ export default function App() {
         return;
       }
       fetchMovies();
+
+      return function () {
+        controller.abort();
+      };
     },
     [query]
   );
