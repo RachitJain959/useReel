@@ -344,6 +344,10 @@ function SelectedMovieDetails({
     function () {
       if (!title) return;
       document.title = `Movie | ${title}`;
+
+      return function () {
+        document.title = 'useReel';
+      };
     },
     [title]
   );
