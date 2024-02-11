@@ -4,7 +4,7 @@ export function useKeyPress(key, action) {
   useEffect(
     function () {
       function callback(e) {
-        if (e.code === 'Escape') {
+        if (e.code.toLowercase === key.toLowercase) {
           action();
         }
       }
@@ -15,6 +15,6 @@ export function useKeyPress(key, action) {
         document.removeEventListener('keydown', callback);
       };
     },
-    [action]
+    [action, key]
   );
 }
