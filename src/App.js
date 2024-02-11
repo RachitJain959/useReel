@@ -25,12 +25,19 @@ export default function App() {
   function handleAddWatched(movie) {
     setWatched((watched) => [...watched, movie]);
 
-    localStorage.setItem('watched', JSON.stringify([...watched, movie]));
+    // localStorage.setItem('watched', JSON.stringify([...watched, movie]));
   }
 
   function handleDelete(id) {
     setWatched((watched) => watched.filter((m) => m.imdbID !== id));
   }
+
+  useEffect(
+    function () {
+      localStorage.setItem('watched', JSON.stringify([watched]));
+    },
+    [watched]
+  );
 
   useEffect(
     function () {
