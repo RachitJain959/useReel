@@ -51,5 +51,5 @@ export function useMovies(query) {
     [query]
   );
 
-  return [movies, isLoading, error];
+  return { movies, isLoading, error };
 }
