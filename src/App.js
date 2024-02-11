@@ -299,6 +299,18 @@ function SelectedMovieDetails({
   const [isLoading, setIsLoading] = useState(false);
   const [userRating, setUserRating] = useState(null);
 
+  //   Counting changes in userRating behind the scenes without the state updating
+  const countUserRating = useRef(0);
+
+  useEffect(
+    function () {
+      if (userRating) {
+        countUserRating.current += 1;
+      }
+    },
+    [userRating]
+  );
+
   const isWatched = watched
     .map((movie) => movie.imdbID)
     .includes(selectedMovieId);
@@ -329,6 +341,7 @@ function SelectedMovieDetails({
       runtime: Number(runtime.split(' ').at(0)),
       imdbRating: Number(imdbRating),
       userRating,
+      countUserRating: countUserRating.current,
     };
 
     onAddWatch(newWatchedMovie);
