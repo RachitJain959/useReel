@@ -6,11 +6,15 @@ const average = (arr) =>
 
 export default function App() {
   const [movies, setMovies] = useState([]);
-  const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [query, setQuery] = useState('');
   const [selectedMovieId, setSelectedMovieId] = useState(null);
+  //   const [watched, setWatched] = useState([]);
+  const [watched, setWatched] = useState(function () {
+    const storedValue = localStorage.getItem('watched');
+    return JSON.parse(storedValue);
+  });
 
   const tempQuery = 'interstellar';
 
@@ -25,6 +29,7 @@ export default function App() {
   function handleAddWatched(movie) {
     setWatched((watched) => [...watched, movie]);
 
+    // Note below.
     // localStorage.setItem('watched', JSON.stringify([...watched, movie]));
   }
 
@@ -32,9 +37,11 @@ export default function App() {
     setWatched((watched) => watched.filter((m) => m.imdbID !== id));
   }
 
+  //Note: we use useEffect instead of above, because it has now 'hooked' with the watched state.
+  //So when the watched gets updated, localStorage automatically gets updated instead of manually updating for different functionalities.
   useEffect(
     function () {
-      localStorage.setItem('watched', JSON.stringify([watched]));
+      localStorage.setItem('watched', JSON.stringify(watched));
     },
     [watched]
   );
