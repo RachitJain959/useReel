@@ -319,7 +319,7 @@ function SelectedMovieDetails({
       async function getMovieDetails() {
         setIsLoading(true);
         const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${process.env.REACT_APP_KEY}&i=${selectedMovieId}`
+          `https://www.omdbapi.com/?apikey=${process.env.REACT_APP_KEY}&i=${selectedMovieId}`
         );
         const data = await res.json();
         setSelectedMovie(data);
