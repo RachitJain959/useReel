@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 export function useMovies(query) {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   useEffect(
     function () {
       const controller = new AbortController(); //to counter race condition
@@ -11,25 +11,25 @@ export function useMovies(query) {
       async function fetchMovies() {
         try {
           setIsLoading(true);
-          setError('');
+          setError("");
 
           const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${process.env.REACT_APP_KEY}&s=${query}`,
+            `https://www.omdbapi.com/?apikey=${process.env.REACT_APP_KEY}&s=${query}`,
             { signal: controller.signal }
           );
           if (!res.ok) {
-            throw new Error('Something went wrong');
+            throw new Error("Something went wrong");
           }
 
           const data = await res.json();
-          if (data.Response === 'False') {
-            throw new Error('Movie not found');
+          if (data.Response === "False") {
+            throw new Error("Movie not found");
           }
 
           setMovies(data.Search);
-          setError('');
+          setError("");
         } catch (err) {
-          if (err.name !== 'Abort') {
+          if (err.name !== "Abort") {
             setError(err.message);
           }
         } finally {
@@ -38,7 +38,7 @@ export function useMovies(query) {
       }
       if (query.length < 3) {
         setMovies([]);
-        setError('');
+        setError("");
         return;
       }
       //   handleCloseMovie();
