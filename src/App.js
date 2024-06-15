@@ -1,22 +1,22 @@
-import { useEffect, useRef, useState } from 'react';
-import StarRating from './StarRating';
-import { useMovies } from './useMovies';
-import { useLocalStorageState } from './useLocalStorageState';
-import { useKeyPress } from './useKeyPress';
+import { useEffect, useRef, useState } from "react";
+import StarRating from "./StarRating";
+import { useMovies } from "./useMovies";
+import { useLocalStorageState } from "./useLocalStorageState";
+import { useKeyPress } from "./useKeyPress";
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 export default function App() {
-  const [query, setQuery] = useState('');
+  const [query, setQuery] = useState("");
   const [selectedMovieId, setSelectedMovieId] = useState(null);
   //   const [watched, setWatched] = useState([]);
 
   const { movies, isLoading, error } = useMovies(query);
 
-  const [watched, setWatched] = useLocalStorageState([], 'watched');
+  const [watched, setWatched] = useLocalStorageState([], "watched");
 
-  const tempQuery = 'interstellar';
+  //   const tempQuery = "interstellar";
 
   function handleSelectMovie(id) {
     setSelectedMovieId((movieId) => (movieId === id ? null : id));
@@ -109,7 +109,7 @@ function Logo() {
 function SearchBar({ query, setQuery }) {
   const inputEl = useRef(null);
 
-  useKeyPress('Enter', function () {
+  useKeyPress("Enter", function () {
     inputEl.current.focus();
   });
 
@@ -153,7 +153,7 @@ function Box({ children }) {
   return (
     <div className="box">
       <button className="btn-toggle" onClick={() => setIsOpen((open) => !open)}>
-        {isOpen ? '–' : '+'}
+        {isOpen ? "–" : "+"}
       </button>
       {isOpen && children}
     </div>
@@ -290,7 +290,7 @@ function SelectedMovieDetails({
       title,
       year,
       poster,
-      runtime: Number(runtime.split(' ').at(0)),
+      runtime: Number(runtime.split(" ").at(0)),
       imdbRating: Number(imdbRating),
       userRating,
       countUserRating: countUserRating.current,
@@ -300,7 +300,7 @@ function SelectedMovieDetails({
     onCloseMovie();
   }
 
-  useKeyPress('Escape', onCloseMovie);
+  useKeyPress("Escape", onCloseMovie);
 
   useEffect(
     function () {
@@ -308,7 +308,7 @@ function SelectedMovieDetails({
       document.title = `Movie | ${title}`;
 
       return function () {
-        document.title = 'useReel';
+        document.title = "useReel";
       };
     },
     [title]
